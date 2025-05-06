@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from datetime import datetime, timedelta
 from typing import List, Dict
-from wardrobe import Wardrobe
+from src.wardrobe import Wardrobe
 
 # --- CONFIG ---
 API_KEY = '2a7866daf05f37f889e8d6f275122659'
