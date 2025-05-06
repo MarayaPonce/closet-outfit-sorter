@@ -6,15 +6,16 @@ from typing import List, Dict
 # --- CONFIG ---
 API_KEY = '2a7866daf05f37f889e8d6f275122659'
 UNITS = 'metric'
+STYLE_OPTIONS = ["sporty", "formal / elegant", "day-to-day", "day event", "night event"]
 
 # Initialize wardrobe in session state
 if "wardrobe_data" not in st.session_state:
     st.session_state.wardrobe_data = [
-        {"name": "Black Blazer", "type": "jacket", "tags": ["formal", "cold"], "color": "black", "custom_tag": "outer"},
-        {"name": "White Shirt", "type": "top", "tags": ["formal"], "color": "white", "custom_tag": "inner"},
-        {"name": "Jeans", "type": "bottom", "tags": ["casual"], "color": "blue", "custom_tag": "bottom"},
-        {"name": "Raincoat", "type": "jacket", "tags": ["casual", "rain"], "color": "blue", "custom_tag": "outer"},
-        {"name": "Sweater", "type": "top", "tags": ["casual", "cold"], "color": "gray", "custom_tag": "mid"},
+        {"name": "Black Blazer", "type": "jacket", "tags": ["formal / elegant", "cold"], "color": "black", "brand": "Zara"},
+        {"name": "White Shirt", "type": "top", "tags": ["formal / elegant"], "color": "white", "brand": "H&M"},
+        {"name": "Jeans", "type": "bottom", "tags": ["day-to-day"], "color": "blue", "brand": ""},
+        {"name": "Raincoat", "type": "jacket", "tags": ["day-to-day", "rain"], "color": "blue", "brand": "Decathlon"},
+        {"name": "Sweater", "type": "top", "tags": ["day-to-day", "cold"], "color": "gray", "brand": ""},
     ]
 
 # --- Weather + Outfit Suggestion Functions ---
@@ -70,19 +71,18 @@ page = st.sidebar.radio("Menu", ["Add Clothing Item", "View Wardrobe", "Suggest 
 if page == "Add Clothing Item":
     st.header("Add a New Clothing Item")
     name = st.text_input("Name")
-    type_ = st.text_input("Type (top, bottom, both, shoes, accesory.)")
+    type_ = st.text_input("Type (top, bottom, etc.)")
     color = st.text_input("Color")
-    tags_input = st.text_input("Style (formal, sporty, etc)")
-    custom_tag = st.text_input("Custom Tag")
+    tags = st.multiselect("Select style tags", STYLE_OPTIONS)
+    brand = st.text_input("Brand (optional)", value="")
 
     if st.button("Save Item"):
-        tags = [t.strip() for t in tags_input.split(",") if t.strip()]
         item = {
             "name": name,
             "type": type_,
             "color": color,
-            "style": tags,
-            "custom_tag": custom_tag
+            "tags": tags,
+            "brand": brand.strip()
         }
         st.session_state.wardrobe_data.append(item)
         st.success(f"Item saved: {name}")
@@ -92,18 +92,20 @@ elif page == "View Wardrobe":
     if not st.session_state.wardrobe_data:
         st.info("No clothing items saved yet.")
     else:
-        for i, item in enumerate(st.session_state.wardrobe_data, 1):
-            st.markdown(f"### Item {i}")
-            st.write(f"**Name:** {item['name']}")
-            st.write(f"**Type:** {item['type']}")
-            st.write(f"**Color:** {item['color']}")
-            st.write(f"**Style:** {', '.join(item['tags'])}")
-            st.write(f"**Custom Tag:** {item['custom_tag']}")
-            st.markdown("---")
+        cols = st.columns(3)
+        for idx, item in enumerate(st.session_state.wardrobe_data):
+            with cols[idx % 3]:
+                st.markdown(f"**👕 {item['name']}**")
+                st.markdown(f"- Type: `{item['type']}`")
+                st.markdown(f"- Color: `{item['color']}`")
+                st.markdown(f"- Tags: `{', '.join(item['tags'])}`")
+                if item['brand']:
+                    st.markdown(f"- Brand: `{item['brand']}`")
+                st.markdown("---")
 
 elif page == "Suggest Outfit":
     st.header("🎯 Smart Outfit Recommender")
-    event = st.selectbox("What kind of event are you dressing for?", ["formal", "casual", "sporty"])
+    event = st.selectbox("What kind of event are you dressing for?", STYLE_OPTIONS)
     city = st.text_input("Enter your city for weather forecast:", "Madrid")
 
     if st.button("Suggest Based on Tomorrow's Weather"):
@@ -118,6 +120,3 @@ elif page == "Suggest Outfit":
                 st.write(f"👕 **{item['name']}** — Type: {item['type']}, Tags: {', '.join(item['tags'])}")
         else:
             st.warning("No suitable outfit found in your wardrobe.")
-
-
-
