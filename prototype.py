@@ -104,7 +104,7 @@ elif page == "View Wardrobe":
                     st.markdown(f"- Brand: `{item['brand']}`")
                 if st.button("🗑️ Delete", key=f"delete_{idx}"):
                     st.session_state.wardrobe_data.pop(idx)
-                    st.experimental_rerun()
+                    st.rerun()
                 st.markdown("---")
 
 elif page == "Suggest Outfit":
