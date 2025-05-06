@@ -9,7 +9,13 @@ UNITS = 'metric'
 
 # Initialize wardrobe in session state
 if "wardrobe_data" not in st.session_state:
-    st.session_state.wardrobe_data = []
+    st.session_state.wardrobe_data = [
+        {"name": "Black Blazer", "type": "jacket", "tags": ["formal", "cold"], "color": "black", "custom_tag": "outer"},
+        {"name": "White Shirt", "type": "top", "tags": ["formal"], "color": "white", "custom_tag": "inner"},
+        {"name": "Jeans", "type": "bottom", "tags": ["casual"], "color": "blue", "custom_tag": "bottom"},
+        {"name": "Raincoat", "type": "jacket", "tags": ["casual", "rain"], "color": "blue", "custom_tag": "outer"},
+        {"name": "Sweater", "type": "top", "tags": ["casual", "cold"], "color": "gray", "custom_tag": "mid"},
+    ]
 
 # --- Weather + Outfit Suggestion Functions ---
 def get_tomorrow_weather_tags(city: str, api_key: str) -> List[str]:
@@ -64,9 +70,9 @@ page = st.sidebar.radio("Menu", ["Add Clothing Item", "View Wardrobe", "Suggest 
 if page == "Add Clothing Item":
     st.header("Add a New Clothing Item")
     name = st.text_input("Name")
-    type_ = st.text_input("Type (top, bottom, etc.)")
+    type_ = st.text_input("Type (top, bottom, both, shoes, accesory.)")
     color = st.text_input("Color")
-    tags_input = st.text_input("Tags (comma-separated)")
+    tags_input = st.text_input("Style (formal, sporty, etc)")
     custom_tag = st.text_input("Custom Tag")
 
     if st.button("Save Item"):
@@ -75,7 +81,7 @@ if page == "Add Clothing Item":
             "name": name,
             "type": type_,
             "color": color,
-            "tags": tags,
+            "style": tags,
             "custom_tag": custom_tag
         }
         st.session_state.wardrobe_data.append(item)
@@ -91,7 +97,7 @@ elif page == "View Wardrobe":
             st.write(f"**Name:** {item['name']}")
             st.write(f"**Type:** {item['type']}")
             st.write(f"**Color:** {item['color']}")
-            st.write(f"**Tags:** {', '.join(item['tags'])}")
+            st.write(f"**Style:** {', '.join(item['tags'])}")
             st.write(f"**Custom Tag:** {item['custom_tag']}")
             st.markdown("---")
 
@@ -112,4 +118,6 @@ elif page == "Suggest Outfit":
                 st.write(f"👕 **{item['name']}** — Type: {item['type']}, Tags: {', '.join(item['tags'])}")
         else:
             st.warning("No suitable outfit found in your wardrobe.")
+
+
 
