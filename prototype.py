@@ -1,3 +1,4 @@
+
 import streamlit as st
 import requests
 from datetime import datetime, timedelta
@@ -101,6 +102,9 @@ elif page == "View Wardrobe":
                 st.markdown(f"- Tags: `{', '.join(item['tags'])}`")
                 if item['brand']:
                     st.markdown(f"- Brand: `{item['brand']}`")
+                if st.button("🗑️ Delete", key=f"delete_{idx}"):
+                    st.session_state.wardrobe_data.pop(idx)
+                    st.experimental_rerun()
                 st.markdown("---")
 
 elif page == "Suggest Outfit":
