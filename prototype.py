@@ -11,11 +11,11 @@ STYLE_OPTIONS = ["sporty", "formal / elegant", "day-to-day", "day event", "night
 # Initialize wardrobe in session state
 if "wardrobe_data" not in st.session_state:
     st.session_state.wardrobe_data = [
-        {"name": "Black Blazer", "type": "jacket", "tags": ["formal / elegant", "cold"], "color": "black", "custom_tag": "outer"},
-        {"name": "White Shirt", "type": "top", "tags": ["formal / elegant"], "color": "white", "custom_tag": "inner"},
-        {"name": "Jeans", "type": "bottom", "tags": ["day-to-day"], "color": "blue", "custom_tag": "bottom"},
-        {"name": "Raincoat", "type": "jacket", "tags": ["day-to-day", "rain"], "color": "blue", "custom_tag": "outer"},
-        {"name": "Sweater", "type": "top", "tags": ["day-to-day", "cold"], "color": "gray", "custom_tag": "mid"},
+        {"name": "Black Blazer", "type": "jacket", "tags": ["formal / elegant", "cold"], "color": "black", "brand": "Zara"},
+        {"name": "White Shirt", "type": "top", "tags": ["formal / elegant"], "color": "white", "brand": "H&M"},
+        {"name": "Jeans", "type": "bottom", "tags": ["day-to-day"], "color": "blue", "brand": ""},
+        {"name": "Raincoat", "type": "jacket", "tags": ["day-to-day", "rain"], "color": "blue", "brand": "Decathlon"},
+        {"name": "Sweater", "type": "top", "tags": ["day-to-day", "cold"], "color": "gray", "brand": ""},
     ]
 
 # --- Weather + Outfit Suggestion Functions ---
@@ -74,7 +74,7 @@ if page == "Add Clothing Item":
     type_ = st.text_input("Type (top, bottom, etc.)")
     color = st.text_input("Color")
     tags = st.multiselect("Select style tags", STYLE_OPTIONS)
-    custom_tag = st.text_input("Custom Tag")
+    brand = st.text_input("Brand (optional)", value="")
 
     if st.button("Save Item"):
         item = {
@@ -82,7 +82,7 @@ if page == "Add Clothing Item":
             "type": type_,
             "color": color,
             "tags": tags,
-            "custom_tag": custom_tag
+            "brand": brand.strip()
         }
         st.session_state.wardrobe_data.append(item)
         st.success(f"Item saved: {name}")
@@ -99,7 +99,8 @@ elif page == "View Wardrobe":
                 st.markdown(f"- Type: `{item['type']}`")
                 st.markdown(f"- Color: `{item['color']}`")
                 st.markdown(f"- Tags: `{', '.join(item['tags'])}`")
-                st.markdown(f"- Custom: `{item['custom_tag']}`")
+                if item['brand']:
+                    st.markdown(f"- Brand: `{item['brand']}`")
                 st.markdown("---")
 
 elif page == "Suggest Outfit":
@@ -119,5 +120,3 @@ elif page == "Suggest Outfit":
                 st.write(f"👕 **{item['name']}** — Type: {item['type']}, Tags: {', '.join(item['tags'])}")
         else:
             st.warning("No suitable outfit found in your wardrobe.")
-            
-
