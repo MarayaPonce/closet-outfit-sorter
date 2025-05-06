@@ -1,4 +1,3 @@
-
 import streamlit as st
 import requests
 from datetime import datetime, timedelta
@@ -7,15 +6,16 @@ from typing import List, Dict
 # --- CONFIG ---
 API_KEY = '2a7866daf05f37f889e8d6f275122659'
 UNITS = 'metric'
+STYLE_OPTIONS = ["sporty", "formal / elegant", "day-to-day", "day event", "night event"]
 
 # Initialize wardrobe in session state
 if "wardrobe_data" not in st.session_state:
     st.session_state.wardrobe_data = [
-        {"name": "Black Blazer", "type": "jacket", "tags": ["formal", "cold"], "color": "black", "custom_tag": "outer"},
-        {"name": "White Shirt", "type": "top", "tags": ["formal"], "color": "white", "custom_tag": "inner"},
-        {"name": "Jeans", "type": "bottom", "tags": ["casual"], "color": "blue", "custom_tag": "bottom"},
-        {"name": "Raincoat", "type": "jacket", "tags": ["casual", "rain"], "color": "blue", "custom_tag": "outer"},
-        {"name": "Sweater", "type": "top", "tags": ["casual", "cold"], "color": "gray", "custom_tag": "mid"},
+        {"name": "Black Blazer", "type": "jacket", "tags": ["formal / elegant", "cold"], "color": "black", "custom_tag": "outer"},
+        {"name": "White Shirt", "type": "top", "tags": ["formal / elegant"], "color": "white", "custom_tag": "inner"},
+        {"name": "Jeans", "type": "bottom", "tags": ["day-to-day"], "color": "blue", "custom_tag": "bottom"},
+        {"name": "Raincoat", "type": "jacket", "tags": ["day-to-day", "rain"], "color": "blue", "custom_tag": "outer"},
+        {"name": "Sweater", "type": "top", "tags": ["day-to-day", "cold"], "color": "gray", "custom_tag": "mid"},
     ]
 
 # --- Weather + Outfit Suggestion Functions ---
@@ -73,11 +73,10 @@ if page == "Add Clothing Item":
     name = st.text_input("Name")
     type_ = st.text_input("Type (top, bottom, etc.)")
     color = st.text_input("Color")
-    tags_input = st.text_input("Tags (comma-separated)")
+    tags = st.multiselect("Select style tags", STYLE_OPTIONS)
     custom_tag = st.text_input("Custom Tag")
 
     if st.button("Save Item"):
-        tags = [t.strip() for t in tags_input.split(",") if t.strip()]
         item = {
             "name": name,
             "type": type_,
@@ -105,7 +104,7 @@ elif page == "View Wardrobe":
 
 elif page == "Suggest Outfit":
     st.header("🎯 Smart Outfit Recommender")
-    event = st.selectbox("What kind of event are you dressing for?", ["formal", "casual", "sporty"])
+    event = st.selectbox("What kind of event are you dressing for?", STYLE_OPTIONS)
     city = st.text_input("Enter your city for weather forecast:", "Madrid")
 
     if st.button("Suggest Based on Tomorrow's Weather"):
@@ -120,4 +119,5 @@ elif page == "Suggest Outfit":
                 st.write(f"👕 **{item['name']}** — Type: {item['type']}, Tags: {', '.join(item['tags'])}")
         else:
             st.warning("No suitable outfit found in your wardrobe.")
+            
 
