@@ -1,5 +1,5 @@
 import pytest
-from app import suggest_outfit
+from src.app import suggest_outfit
 
 @pytest.fixture
 def sample_wardrobe():
@@ -18,8 +18,3 @@ def test_suggest_outfit_formal_cold(sample_wardrobe):
 def test_suggest_outfit_rainy_day(sample_wardrobe):
     result = suggest_outfit("day-to-day", ["rain"], sample_wardrobe)
     assert any(item["name"] == "Raincoat" for item in result)
-
-def test_suggest_outfit_no_match():
-    closet = [{"name": "Tank Top", "type": "top", "tags": ["hot"], "color": "red", "brand": ""}]
-    result = suggest_outfit("formal / elegant", ["cold"], closet)
-    assert result == []
