@@ -4,4 +4,6 @@ channels:
 dependencies:
   - streamlit
   - pandas
+  - python
+  - requests
   
