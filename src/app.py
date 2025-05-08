@@ -5,7 +5,6 @@ from typing import List, Dict
 from src.wardrobe import Wardrobe
 
 # --- CONFIG ---
-API_KEY = '2a7866daf05f37f889e8d6f275122659'
 UNITS = 'metric'
 STYLE_OPTIONS = ["sporty", "formal / elegant", "day-to-day", "day event", "night event"]
 wardrobe = Wardrobe()
