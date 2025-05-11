@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from typing import List, Dict
 
 # --- CONFIG ---
-API_KEY = '2a7866daf05f37f889e8d6f275122659'
+API_KEY = st.secrets["api"]["API_KEY"]
 UNITS = 'metric'
 STYLE_OPTIONS = ["sporty", "formal / elegant", "day-to-day", "day event", "night event"]
 
