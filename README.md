@@ -22,6 +22,8 @@ You can run the tests with pytest by running the following command in the root d
 ```sh
 pytest -v
 ```
+The app.py file is a less advanced version of prototype.py, but has been kept on the repository for the tests purpose. 
+
 
 ## Usage
 Our project can be used through streamlit. 
