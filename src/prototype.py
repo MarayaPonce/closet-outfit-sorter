@@ -21,6 +21,11 @@ if "wardrobe_data" not in st.session_state:
 
 # --- Weather + Outfit Suggestion Functions ---
 def get_tomorrow_weather_tags(city: str, api_key: str) -> List[str]:
+    if not api_key:
+        raise ValueError("API key must be provided for weather lookup.")
+    
+    assert not city.isnumeric(), "City name cannot be purely numeric."
+
     url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units={UNITS}"
     response = requests.get(url)
     if response.status_code != 200:
@@ -78,15 +83,28 @@ if page == "Add Clothing Item":
     brand = st.text_input("Brand (optional)", value="")
 
     if st.button("Save Item"):
-        item = {
+        try:
+            if not name:
+                raise ValueError("Clothing name cannot be empty.")
+            if not type_:
+                raise ValueError("Clothing type cannot be empty")
+            
+            assert not name.isnumeric(), "Clothing name cannot be numeric."
+            
+            assert len(name) <= 50, "Clothing name must be under 50 characters."
+            assert len(type_) <= 30, "Clothing type must be under 30 characters."
+            assert len(brand) <= 50, "Brand name must be under 50 characters."
+            item = {
             "name": name,
             "type": type_,
             "color": color,
             "tags": tags,
             "brand": brand.strip()
-        }
-        st.session_state.wardrobe_data.append(item)
-        st.success(f"Item saved: {name}")
+            }
+            st.session_state.wardrobe_data.append(item)
+            st.success(f"Item saved: {name}")
+        except (AssertionError, ValueError) as e:
+            st.error(str(e))
 
 elif page == "View Wardrobe":
     st.header("👚 All Saved Items")
