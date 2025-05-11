@@ -7,6 +7,7 @@ from src.wardrobe import Wardrobe
 # --- CONFIG ---
 UNITS = 'metric'
 STYLE_OPTIONS = ["sporty", "formal / elegant", "day-to-day", "day event", "night event"]
+API_KEY = st.secrets["api"]["API_KEY"]
 wardrobe = Wardrobe()
 
 # Initialize wardrobe in session state
