@@ -5,7 +5,7 @@ from typing import List, Dict
 from wardrobe import Wardrobe  # your class from wardrobe.py
 
 # --- CONFIG ---
-API_KEY = st.secrets ["api"]["API_KEY"]
+API_KEY = st.secrets["api"]["API_KEY"]
 UNITS = 'metric'
 STYLE_OPTIONS = ["sporty", "formal / elegant", "day-to-day", "day event", "night event"]
 
