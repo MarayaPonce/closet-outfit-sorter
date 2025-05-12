@@ -24,7 +24,7 @@ def get_tomorrow_weather_tags(city: str, api_key: str) -> List[str]:
     assert not city.isnumeric(), "City name cannot be purely numeric."
 
     url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units={UNITS}"
-    response = requests.get(url)
+    response = requests.get(url, timeout= 5)
     if response.status_code != 200:
         st.error("Weather API error: " + response.json().get("message", "Unknown error"))
         return []
