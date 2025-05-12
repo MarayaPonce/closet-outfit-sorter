@@ -1,5 +1,5 @@
 import pytest
-from app import suggest_outfit
+from src.app import suggest_outfit
 
 @pytest.fixture
 def sample_wardrobe():
@@ -23,3 +23,4 @@ def test_suggest_outfit_no_match():
     closet = [{"name": "Tank Top", "type": "top", "tags": ["hot"], "color": "red", "brand": ""}]
     result = suggest_outfit("formal / elegant", ["cold"], closet)
     assert result == []
+    

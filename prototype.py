@@ -1,26 +1,28 @@
-# some comment
 import streamlit as st
 import requests
 from datetime import datetime, timedelta
 from typing import List, Dict
+from wardrobe import Wardrobe  # your class from wardrobe.py
 
 # --- CONFIG ---
 API_KEY = st.secrets["api"]["API_KEY"]
 UNITS = 'metric'
 STYLE_OPTIONS = ["sporty", "formal / elegant", "day-to-day", "day event", "night event"]
 
-# Initialize wardrobe in session state
+# --- Initialize Wardrobe ---
+if "wardrobe" not in st.session_state:
+    st.session_state.wardrobe = Wardrobe("closet.csv")
+
 if "wardrobe_data" not in st.session_state:
-    st.session_state.wardrobe_data = [
-        {"name": "Black Blazer", "type": "jacket", "tags": ["formal / elegant", "cold"], "color": "black", "brand": "Zara"},
-        {"name": "White Shirt", "type": "top", "tags": ["formal / elegant"], "color": "white", "brand": "H&M"},
-        {"name": "Jeans", "type": "bottom", "tags": ["day-to-day"], "color": "blue", "brand": ""},
-        {"name": "Raincoat", "type": "jacket", "tags": ["day-to-day", "rain"], "color": "blue", "brand": "Decathlon"},
-        {"name": "Sweater", "type": "top", "tags": ["day-to-day", "cold"], "color": "gray", "brand": ""},
-    ]
+    st.session_state.wardrobe_data = st.session_state.wardrobe.get_items()
 
 # --- Weather + Outfit Suggestion Functions ---
 def get_tomorrow_weather_tags(city: str, api_key: str) -> List[str]:
+    if not api_key:
+        raise ValueError("API key must be provided for weather lookup.")
+    
+    assert not city.isnumeric(), "City name cannot be purely numeric."
+
     url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units={UNITS}"
     response = requests.get(url, timeout= 5)
     if response.status_code != 200:
@@ -78,23 +80,66 @@ if page == "Add Clothing Item":
     brand = st.text_input("Brand (optional)", value="")
 
     if st.button("Save Item"):
-        item = {
-            "name": name,
-            "type": type_,
-            "color": color,
-            "tags": tags,
-            "brand": brand.strip()
-        }
-        st.session_state.wardrobe_data.append(item)
-        st.success(f"Item saved: {name}")
+        try:
+            if not name:
+                raise ValueError("Clothing name cannot be empty.")
+            if not type_:
+                raise ValueError("Clothing type cannot be empty")
+            assert not name.isnumeric(), "Clothing name cannot be numeric."
+            assert len(name) <= 50
+            assert len(type_) <= 30
+            assert len(brand) <= 50
+
+            item = {
+                "name": name,
+                "type": type_,
+                "color": color,
+                "tags": tags,
+                "brand": brand.strip()
+            }
+
+            st.session_state.wardrobe.add_item(item)
+            st.session_state.wardrobe_data = st.session_state.wardrobe.get_items()
+            st.success(f"Item saved: {name}")
+        except (AssertionError, ValueError) as e:
+            st.error(str(e))
 
 elif page == "View Wardrobe":
     st.header("👚 All Saved Items")
-    if not st.session_state.wardrobe_data:
+    wardrobe = st.session_state.wardrobe_data
+
+    if not wardrobe:
         st.info("No clothing items saved yet.")
     else:
+        with st.expander("🔍 Filter items"):
+            colors = sorted(set(item["color"] for item in wardrobe if item["color"]))
+            types = sorted(set(item["type"] for item in wardrobe if item["type"]))
+            brands = sorted(set(item["brand"] for item in wardrobe if item["brand"]))
+            all_tags = sorted(set(tag for item in wardrobe for tag in item["tags"]))
+
+            selected_colors = st.multiselect("Filter by Color", colors, key="color_filter")
+            selected_types = st.multiselect("Filter by Type", types, key="type_filter")
+            selected_brands = st.multiselect("Filter by Brand", brands, key="brand_filter")
+            selected_tags = st.multiselect("Filter by Style Tags", all_tags, key="tag_filter")
+
+            if st.button("Reset Filters"):
+                st.session_state.color_filter = []
+                st.session_state.type_filter = []
+                st.session_state.brand_filter = []
+                st.session_state.tag_filter = []
+
+            filtered_wardrobe = [
+                item for item in wardrobe
+                if (not selected_colors or item["color"] in selected_colors)
+                and (not selected_types or item["type"] in selected_types)
+                and (not selected_brands or item["brand"] in selected_brands)
+                and (not selected_tags or any(tag in item["tags"] for tag in selected_tags))
+            ]
+
         cols = st.columns(3)
-        for idx, item in enumerate(st.session_state.wardrobe_data):
+        if not filtered_wardrobe:
+            st.warning("No items match the selected filters.")
+        for idx, item in enumerate(filtered_wardrobe):
             with cols[idx % 3]:
                 st.markdown(f"**👕 {item['name']}**")
                 st.markdown(f"- Type: `{item['type']}`")
@@ -102,9 +147,6 @@ elif page == "View Wardrobe":
                 st.markdown(f"- Tags: `{', '.join(item['tags'])}`")
                 if item['brand']:
                     st.markdown(f"- Brand: `{item['brand']}`")
-                if st.button("🗑️ Delete", key=f"delete_{idx}"):
-                    st.session_state.wardrobe_data.pop(idx)
-                    st.rerun()
                 st.markdown("---")
 
 elif page == "Suggest Outfit":
@@ -119,9 +161,10 @@ elif page == "Suggest Outfit":
         outfit = suggest_outfit(event, weather_tags, st.session_state.wardrobe_data)
 
         if outfit:
-            st.success("Here's your suggested outfit:")
+            st.subheader("Recommended Outfit:")
             for item in outfit:
-                st.write(f"👕 **{item['name']}** — Type: {item['type']}, Tags: {', '.join(item['tags'])}")
+                st.markdown(f"**👕 {item['name']}** - `{item['type']}`, `{item['color']}`")
         else:
-            st.warning("No suitable outfit found in your wardrobe.")
+            st.warning("No suitable outfit found.")
+
 
