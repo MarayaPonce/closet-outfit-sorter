@@ -22,7 +22,7 @@ if "wardrobe_data" not in st.session_state:
 # --- Weather + Outfit Suggestion Functions ---
 def get_tomorrow_weather_tags(city: str, api_key: str) -> List[str]:
     url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units={UNITS}"
-    response = requests.get(url)
+    response = requests.get(url, timeout= 5)
     if response.status_code != 200:
         st.error("Weather API error: " + response.json().get("message", "Unknown error"))
         return []
