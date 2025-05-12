@@ -1,1 +1,6 @@
-id,name,category,color,season
+name,type,color,tags,brand
+Black Blazer,jacket,black,"formal / elegant;cold",Zara
+White Shirt,top,white,"formal / elegant",H&M
+Jeans,bottom,blue,"day-to-day",
+Raincoat,jacket,blue,"day-to-day;rain",Decathlon
+Sweater,top,gray,"day-to-day;cold",
