@@ -16,5 +16,6 @@ Thumbs.db
 .devcontainer
 
 .closet_outfit_sorter.egg-info
-.build/lib/wardrobe
+.build
+
 
