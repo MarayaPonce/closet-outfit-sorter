@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from datetime import datetime, timedelta
 from typing import List, Dict
-from wardrobe import Wardrobe  # your class from wardrobe.py
+from src.wardrobe import Wardrobe  # your class from wardrobe.py
 
 # --- CONFIG ---
 API_KEY = st.secrets["api"]["API_KEY"]
