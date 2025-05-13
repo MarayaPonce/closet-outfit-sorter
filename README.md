@@ -29,3 +29,8 @@ The app.py file is a less advanced version of prototype.py, but has been kept on
 Our project can be used through streamlit. 
 
 [Launch the app on Streamlit](https://your-app-name.streamlit.app)
+
+If you want to run the project from the terminal use: 
+```sh
+ streamlit run src/wardrobe/wardrobe.py
+```
