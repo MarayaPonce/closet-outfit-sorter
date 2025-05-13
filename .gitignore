@@ -18,4 +18,8 @@ Thumbs.db
 .closet_outfit_sorter.egg-info
 .build
 
+build/
+dist/
+*.egg-info/
+
 
