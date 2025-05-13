@@ -1,5 +1,5 @@
 import pytest
-from wardrobe.app import suggest_outfit
+from wardrobe.prototype import suggest_outfit
 
 @pytest.fixture
 def sample_wardrobe():
