@@ -1,0 +1,11 @@
+README.md
+setup.py
+src/closet_outfit_sorter.egg-info/PKG-INFO
+src/closet_outfit_sorter.egg-info/SOURCES.txt
+src/closet_outfit_sorter.egg-info/dependency_links.txt
+src/closet_outfit_sorter.egg-info/top_level.txt
+src/wardrobe/__init__.py
+src/wardrobe/app.py
+src/wardrobe/prototype.py
+src/wardrobe/wardrobe.py
+tests/test_wardrobe.py
