@@ -4,7 +4,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../s
 #telling Pyhton to inlcude src when running the tests 
 
 import pytest
-from wardrobe.prototype import suggest_outfit
+from wardrobe.app import suggest_outfit
+
+
 
 @pytest.fixture
 def sample_wardrobe():
