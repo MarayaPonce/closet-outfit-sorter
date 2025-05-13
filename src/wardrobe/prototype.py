@@ -78,6 +78,15 @@ if page == "Add Clothing Item":
     color = st.text_input("Color")
     tags = st.multiselect("Select style tags", STYLE_OPTIONS)
     brand = st.text_input("Brand (optional)", value="")
+    # Add image 
+    image = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+    if image:
+        st.image(image, caption="Uploaded Image", use_column_width=True)
+        # Save the image to a file  
+        image_path = f"images/{name.replace(' ', '_')}.jpg"
+        with open(image_path, "wb") as f:
+            f.write(image.getbuffer())
+
 
     if st.button("Save Item"):
         try:
@@ -95,7 +104,8 @@ if page == "Add Clothing Item":
                 "type": type_,
                 "color": color,
                 "tags": tags,
-                "brand": brand.strip()
+                "brand": brand.strip(),
+                "image": image_path if image else None
             }
 
             st.session_state.wardrobe.add_item(item)
@@ -145,6 +155,8 @@ elif page == "View Wardrobe":
                 st.markdown(f"- Type: `{item['type']}`")
                 st.markdown(f"- Color: `{item['color']}`")
                 st.markdown(f"- Tags: `{', '.join(item['tags'])}`")
+                if "image" in item and item['image']: 
+                    st.image(item['image'], caption=item['name'], use_column_width = True)
                 if item['brand']:
                     st.markdown(f"- Brand: `{item['brand']}`")
                 st.markdown("---")
