@@ -24,8 +24,6 @@ You can run the tests with pytest by running the following command in the root d
 ```sh
 pytest -v
 ```
-The app.py file is a less advanced version of prototype.py, but has been kept on the repository for the tests purpose. 
-
 
 ## Usage
 Our project can be used through streamlit. 
@@ -36,3 +34,5 @@ If you want to run the project from the terminal use:
 ```sh
  streamlit run src/wardrobe/wardrobe.py
 ```
+The main code of the project is in prototype.py (not app.py). app.py is an older version kept as a backup. 
+

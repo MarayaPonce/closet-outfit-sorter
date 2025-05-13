@@ -1,3 +1,8 @@
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src'))) 
+#telling Pyhton to inlcude src when running the tests 
+
 import pytest
 from wardrobe.prototype import suggest_outfit
 
@@ -18,4 +23,3 @@ def test_suggest_outfit_no_match():
     closet = [{"name": "Tank Top", "type": "top", "tags": ["hot"], "color": "red", "brand": ""}]
     result = suggest_outfit("formal / elegant", ["cold"], closet)
     assert result == []
-    
