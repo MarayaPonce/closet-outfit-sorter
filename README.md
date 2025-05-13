@@ -1,6 +1,8 @@
 # closet-outfit-sorter
 Our project consists of a virtual closet. You can uppload your clothing items, by entering their characteristics and an image. You can also ask for suggested outfits base on occasion and weather. 
 
+This app requires an OpenWeatherMap API key. You’ll be prompted to paste it when launching the app.
+
 ## Installation
 
 Dependencies are handled with conda, you can install them with:
