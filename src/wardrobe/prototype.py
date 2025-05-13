@@ -5,7 +5,12 @@ from typing import List, Dict
 from wardrobe import Wardrobe  # your class from wardrobe.py
 
 # --- CONFIG ---
-API_KEY = st.secrets["api"]["API_KEY"]
+API_KEY = st.text_input("Enter your OpenWeatherMap API key", type="password")
+
+if not API_KEY:
+    st.warning("Please enter your API key to continue.")
+    st.stop()
+    
 UNITS = 'metric'
 STYLE_OPTIONS = ["sporty", "formal / elegant", "day-to-day", "day event", "night event"]
 
