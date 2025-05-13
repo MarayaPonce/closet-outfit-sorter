@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from datetime import datetime, timedelta
 from typing import List, Dict
-from wardrobe.wardrobe import Wardrobe
+from wardrobe import Wardrobe
 
 # --- CONFIG ---
 API_KEY = st.text_input("Enter your OpenWeatherMap API key", type="password")
